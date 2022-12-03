@@ -1,5 +1,4 @@
-rm(list = ls())
-library(readr)
+income_read <- function() {
 
 ################################################################################
 #
@@ -13,6 +12,7 @@ mAcc = c("營業收入合計", "營業成本合計", "營業毛利（毛損）",
 ################################################################################
 #
 # define array
+setwd(file.path(stock[1],"csv/comprehensiveincome", fsep = ""))
 rnum = length(mAcc)  # Account title - row
 cnum = length(dir())  # Year - column
 dnum = length(stock)  # Stock - dimension
@@ -35,20 +35,20 @@ for (d in 1:dnum){  # set path by stock
     
     for (r in 1:rnum){  # get field by account
       
-      # get by main Account title
-      Row = which(dta$Account==mAcc[r])  # find row where Account title in mAcc
+      # get by main account title
+      Row = which(dta$Account==mAcc[r])  # find row where account title in mAcc
       dtax3[r,c,d] = as.numeric(dta[Row,2])
       
-      #get by sub Account title
-      
-      
+      #get by sub account title
+      # if (r==4 || r==5 || r==9){  # specific account title
+      #   Row = which(dta$Account==mAcc[r])
+      # }
+      # 
     }
   }
 }
 
 # named array
 dimnames(dtax3) = list(mAcc, substr(dir(),6,9), stock)
-
-
-
 (dtax3)
+}
