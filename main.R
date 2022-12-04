@@ -1,21 +1,23 @@
 rm(list = ls())
 library(readr)
-root = "~/Github/FinancialReportAnalyzer"
+root <- "~/Github/FinancialReportAnalyzer"
 setwd(root)
 # setwd("~/Github/FinancialReportAnalyzer")
 
 ################################################################################
 #
 # 設置 - 股票代號、會計科目
-stock = c("1304", "1308")
+stock <- c("1304", "1308")
 
-mAcc_income = c("　銷貨收入淨額", "營業成本合計", "營業毛利（毛損）", "營業利益（損失）"
-         , "稅前淨利（淨損）", "所得稅費用（利益）合計"
-         , "繼續營業單位本期淨利（淨損）", "本期淨利（淨損）", "本期綜合損益總額")
+mAcc_income <- c(
+    "　銷貨收入淨額", "營業成本合計", "營業毛利（毛損）", "營業利益（損失）",
+    "稅前淨利（淨損）", "所得稅費用（利益）合計",
+    "繼續營業單位本期淨利（淨損）", "本期淨利（淨損）", "本期綜合損益總額"
+)
 
-mAcc_balances = c()
+mAcc_balances <- c()
 
-mAcc_cash = c()
+mAcc_cash <- c()
 
 #
 ################################################################################
@@ -25,6 +27,5 @@ source("~/Github/FinancialReportAnalyzer/income_read.R")
 source("~/Github/FinancialReportAnalyzer/income_draw.R")
 
 # call
-income_dta<-income_read()
+income_dta <- income_read()
 income_draw()
-
