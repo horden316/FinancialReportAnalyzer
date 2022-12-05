@@ -37,4 +37,6 @@ income_draw()
 
 
 source("~/Github/FinancialReportAnalyzer/balance_read.R")
+source("~/Github/FinancialReportAnalyzer/balance_draw.R")
 balance_dta <- balance_read()
+balance_draw()
