@@ -20,7 +20,8 @@ income_draw <- function() {
   #
   # ratio calculate
   # 純益率=本期淨利（淨損）/　銷貨收入淨額
-  Net_profit_margin <- income_dta[8, , ] / income_dta[1, , ]
+  Net_profit_margin <- income_dta[which(mAcc_income=="本期淨利（淨損）"), , ] / 
+    income_dta[which(mAcc_income=="　銷貨收入淨額"), , ]
   Net_profit_margin <- as.data.frame(t(Net_profit_margin))
   dtax[, , 1] <- unlist(Net_profit_margin[1, ])
   dtax[, , 2] <- unlist(Net_profit_margin[2, ])
@@ -45,4 +46,6 @@ income_draw <- function() {
       format(as.Date(colnames(income_dta), format = "%Y"), "%Y")
     ) # X
   }
+  
+  return(dtax)
 }
