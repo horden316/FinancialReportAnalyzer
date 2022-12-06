@@ -1,5 +1,7 @@
 rm(list = ls())
 library(readr)
+library(scales)
+
 root <- "~/Github/FinancialReportAnalyzer"
 setwd(root)
 # setwd("~/Github/FinancialReportAnalyzer")
@@ -10,9 +12,9 @@ setwd(root)
 stock <- c("1304", "1308")
 
 mAcc_income <- c(
-    "　銷貨收入淨額", "營業成本合計", "營業毛利（毛損）", "營業利益（損失）",
-    "稅前淨利（淨損）", "所得稅費用（利益）合計",
-    "繼續營業單位本期淨利（淨損）", "本期淨利（淨損）", "本期綜合損益總額"
+    "　銷貨收入淨額", "　銷貨成本", "營業毛利（毛損）", "　營業費用合計", "營業利益（損失）",
+    "　營業外收入及支出合計", "稅前淨利（淨損）", "所得稅費用（利益）合計",
+    "本期淨利（淨損）", "　其他綜合損益（淨額）", "本期綜合損益總額"
 )
 
 mAcc_balances <- c(
