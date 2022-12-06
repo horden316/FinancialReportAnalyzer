@@ -33,7 +33,7 @@ source("~/Github/FinancialReportAnalyzer/income_draw.R")
 
 # call
 income_dta <- income_read()
-income_draw()
+ratio_dta1 <- income_draw()
 
 
 source("~/Github/FinancialReportAnalyzer/balance_read.R")
