@@ -29,14 +29,17 @@ income_draw <- function() {
   ################################################################################
   #
   # draw
+  print(dtax)
   for (r in 1:rnum) {
     Yrange <- c(min(dtax[r, , ]) / 1.1, max(dtax[r, , ]) * 1.1) # Y
+    print(paste("r: ",r))
     for (d in 1:dnum) {
-      plot(unlist(dtax[, , d]),
+      print(paste("d: ",d))
+      plot(unlist(dtax[r, , d]),
         type = "l", col = paste(color[d]), lwd = 2, main = paste(ratio[r]),
         ylim = Yrange, ylab = "", xlab = "年", xaxt = "n"
       )
-      points(unlist(dtax[, , d]), pch = 16, cex = 1.25, col = paste(color[d]))
+      points(unlist(dtax[r, , d]), pch = 16, cex = 1.25, col = paste(color[d]))
       if (d != dnum) {
         par(new = T)
       }
