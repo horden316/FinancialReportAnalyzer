@@ -2,9 +2,13 @@ income_draw <- function() {
 
   ################################################################################
   # plot title, color
-  #ratio <- c("負債佔資產比率","純益率%","長期資金佔固定資產比率","流動比率","速動比率")
+  # ratio <- c("負債佔資產比率","長期資金佔固定資產比率","流動比率","速動比率",
+  #            "利息保障倍數","應收帳款週轉率","平均收現日數","存貨週轉率","平均售貨日數"
+  #            ,"固定資產週轉率","總資產週轉率","資產報酬率","股東權益報酬率","純益率","每股盈餘",
+  #            "現金流量比率","現金再投資比率")
   ratio <- c("負債佔資產比率","長期資金佔固定資產比率","流動比率","速動比率",
              "利息保障倍數")
+  
   color <- c("orange", "blue")
   #
   ################################################################################
@@ -53,18 +57,35 @@ income_draw <- function() {
 
   #利息保障倍數
   Ratio <- (income_dta[which(mAcc_income == "稅前淨利（淨損）"), , ]+income_dta[which(mAcc_income == "所得稅費用（利益）合計"), , ]) /
-    balance_dta[which(mAcc_balances == "　　流動負債合計"), , ]
+    cash_dta[which(mAcc_cash == "　　　利息費用"), , ]
   Ratio <- as.data.frame(t(Ratio))
   dtax[5, , 1] <- unlist(Ratio[1, ])
   dtax[5, , 2] <- unlist(Ratio[2, ])
 
 
-  # 純益率=本期淨利（淨損）/　銷貨收入淨額
+  # # 純益率=本期淨利（淨損）/　銷貨收入淨額
   # Net_profit_margin <- income_dta[which(mAcc_income=="本期淨利（淨損）"), , ] /
   #   income_dta[which(mAcc_income=="　銷貨收入淨額"), , ]
   # Net_profit_margin <- as.data.frame(t(Net_profit_margin))
-  # dtax[, , 1] <- unlist(Net_profit_margin[1, ])
-  # dtax[, , 2] <- unlist(Net_profit_margin[2, ])
+  # dtax[14, , 1] <- unlist(Net_profit_margin[1, ])
+  # dtax[14, , 2] <- unlist(Net_profit_margin[2, ])
+  
+  
+  # #現金流量比率
+  # Ratio <- (cash_dta[which(mAcc_cash == "營業活動之淨現金流入（流出）"), , ]) /
+  #   balance_dta[which(mAcc_balances == "　　流動負債合計"), , ]
+  # Ratio <- as.data.frame(t(Ratio))
+  # dtax[16, , 1] <- unlist(Ratio[1, ])
+  # dtax[16, , 2] <- unlist(Ratio[2, ])
+  # 
+  # #現金再投資比率
+  # Ratio <- (cash_dta[which(mAcc_cash == "營業活動之淨現金流入（流出）"), , ]-cash_dta[which(mAcc_cash == "　發放現金股利"), , ]) /
+  #   (balance_dta[which(mAcc_balances == "　　非流動資產合計"), , ]+balance_dta[which(mAcc_balances == "　　流動資產合計"), , ]-balance_dta[which(mAcc_balances == "　　流動負債合計"), , ])
+  # Ratio <- as.data.frame(t(Ratio))
+  # dtax[17, , 1] <- unlist(Ratio[1, ])
+  # dtax[17, , 2] <- unlist(Ratio[2, ])
+  
+  
   #
   ################################################################################
   #
