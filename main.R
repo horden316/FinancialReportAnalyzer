@@ -19,8 +19,8 @@ mAcc_income <- c(
 )
 
 mAcc_balances <- c(
-    "　　流動資產合計", "　　非流動資產合計", "　　　應付帳款",
-    "　　　其他流動負債", "　　流動負債合計", "　　非流動負債合計", "　　非流動負債合計",
+    "　　　存貨","　　　預付款項","　　流動資產合計", "　　非流動資產合計","　資產總額", "　　　應付帳款",
+    "　　　其他流動負債", "　　流動負債合計", "　　非流動負債合計",
     "　負債總額", "　　　　普通股股本", "　　　股本合計", "　　　資本公積合計", "　　　保留盈餘合計",
     "　　　其他權益合計", "　權益總額"
 )
@@ -40,9 +40,9 @@ source("~/Github/FinancialReportAnalyzer/analyze.R")
 
 # call
 income_dta <- income_read()
-ratio_dta1 <- income_draw()
-
 balance_dta <- balance_read()
+
+ratio_dta1 <- income_draw()
 
 # analyze
 analyze()
