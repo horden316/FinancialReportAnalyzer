@@ -25,24 +25,28 @@ mAcc_balances <- c(
     "　　　其他權益合計", "　權益總額"
 )
 
-mAcc_cash <- c()
+mAcc_cash <- c(
+  "　繼續營業單位稅前淨利（淨損）", "　本期稅前淨利（淨損）", "　營運產生之現金流入（流出）",
+  "　收取之利息", "　支付之利息", "　退還（支付）之所得稅", "營業活動之淨現金流入（流出）")
 
 #
 ################################################################################
 
 # define source
 source("~/Github/FinancialReportAnalyzer/income_read.R")
-source("~/Github/FinancialReportAnalyzer/income_draw.R")
-
 source("~/Github/FinancialReportAnalyzer/balance_read.R")
+source("~/Github/FinancialReportAnalyzer/cash_read.R")
+
+source("~/Github/FinancialReportAnalyzer/income_draw.R")
 
 source("~/Github/FinancialReportAnalyzer/analyze.R")
 
 # call
 income_dta <- income_read()
-ratio_dta1 <- income_draw()
-
 balance_dta <- balance_read()
+cash_dta <- cash_read()
+
+ratio_dta1 <- income_draw()
 
 # analyze
 analyze()
