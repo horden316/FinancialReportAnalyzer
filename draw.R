@@ -1,4 +1,4 @@
-income_draw <- function() {
+draw <- function() {
 
   ################################################################################
   # plot title, color
@@ -14,13 +14,11 @@ income_draw <- function() {
   ################################################################################
   #
   # define array
-  setwd(root)
-  setwd(file.path(stock[1], "csv/comprehensiveincome", fsep = ""))
   rnum <- length(ratio) # Ratio - row
-  cnum <- length(dir()) # Year - column
+  cnum <- length(year) # Year - column
   dnum <- length(stock) # Stock - dimension
   dtax <- array(numeric(), c(rnum, cnum, dnum)) # 3D array
-  dimnames(dtax) <- list(ratio, substr(dir(), 6, 9), stock) # named array
+  dimnames(dtax) <- list(ratio, year, stock) # named array
   #
   ################################################################################
   #
@@ -106,8 +104,8 @@ income_draw <- function() {
       }
     }
     axis(
-      1, 1:length(colnames(income_dta)),
-      format(as.Date(colnames(income_dta), format = "%Y"), "%Y")
+      1, 1:length(year),
+      format(as.Date(as.character(year), format = "%Y"), "%Y")
     ) # X
   }
   
