@@ -31,5 +31,6 @@ balance_read <- function() {
         }
     }
     # print(dtax)
+    dtax[is.na(dtax)] <- 0
     return(dtax)
 }

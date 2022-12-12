@@ -1,66 +1,82 @@
-income_draw <- function() {
+draw <- function() {
 
   ################################################################################
   # plot title, color
-  # ratio <- c("負債佔資產比率","長期資金佔固定資產比率","流動比率","速動比率",
-  #            "利息保障倍數","應收帳款週轉率","平均收現日數","存貨週轉率","平均售貨日數"
-  #            ,"固定資產週轉率","總資產週轉率","資產報酬率","股東權益報酬率","純益率","每股盈餘",
-  #            "現金流量比率","現金再投資比率")
+  # ratio <- c("負債佔資產比率", "長期資金佔固定資產比率", "流動比率", "速動比率", 
+  #            "利息保障倍數", "應收帳款週轉率", "平均收現日數", "存貨週轉率", "平均售貨日數",
+  #            "固定資產週轉率", "總資產週轉率", "資產報酬率", "股東權益報酬率", "純益率", "每股盈餘", 
+  #            "現金流量比率", "現金再投資比率")
   ratio <- c("負債佔資產比率","長期資金佔固定資產比率","流動比率","速動比率",
-             "利息保障倍數")
+             "利息保障倍數", "應收帳款週轉率")
   
   color <- c("orange", "blue")
   #
   ################################################################################
   #
   # define array
-  setwd(root)
-  setwd(file.path(stock[1], "csv/comprehensiveincome", fsep = ""))
   rnum <- length(ratio) # Ratio - row
-  cnum <- length(dir()) # Year - column
+  cnum <- length(year)-1 # Year - column
   dnum <- length(stock) # Stock - dimension
   dtax <- array(numeric(), c(rnum, cnum, dnum)) # 3D array
-  dimnames(dtax) <- list(ratio, substr(dir(), 6, 9), stock) # named array
+  dimnames(dtax) <- list(ratio, year[2:(cnum+1)], stock) # named array
   #
   ################################################################################
   #
   # ratio calculate
+  ry <- 2:length(year)  # draw year
+  dy <- 1:(length(year)-1)  # data year
   
   #負債佔資產比率
-  Ratio <- balance_dta[which(mAcc_balances == "　負債總額"), , ] / (
-    balance_dta[which(mAcc_balances == "　資產總額"), , ] )
+  Ratio <- balance_dta[which(mAcc_balances == "　負債總額"), ry, ] / (
+    balance_dta[which(mAcc_balances == "　資產總額"), ry, ] )
   Ratio <- as.data.frame(t(Ratio))
   dtax[1, , 1] <- unlist(Ratio[1, ])
   dtax[1, , 2] <- unlist(Ratio[2, ])
   
   #長期資金佔固定資產比率
-  Ratio <- (balance_dta[which(mAcc_balances == "　權益總額"), , ]+balance_dta[which(mAcc_balances == "　　非流動負債合計"), , ]) /
-    balance_dta[which(mAcc_balances == "　　非流動資產合計"), , ]
+  Ratio <- (balance_dta[which(mAcc_balances == "　權益總額"), ry, ]+balance_dta[which(mAcc_balances == "　　非流動負債合計"), ry, ]) /
+    balance_dta[which(mAcc_balances == "　　非流動資產合計"), ry, ]
   Ratio <- as.data.frame(t(Ratio))
   dtax[2, , 1] <- unlist(Ratio[1, ])
   dtax[2, , 2] <- unlist(Ratio[2, ])
   #
   #
   #流動比率
-  Ratio <- (balance_dta[which(mAcc_balances == "　　流動資產合計"), , ]) /
-    balance_dta[which(mAcc_balances == "　　流動負債合計"), , ]
+  Ratio <- (balance_dta[which(mAcc_balances == "　　流動資產合計"), ry, ]) /
+    balance_dta[which(mAcc_balances == "　　流動負債合計"), ry, ]
   Ratio <- as.data.frame(t(Ratio))
   dtax[3, , 1] <- unlist(Ratio[1, ])
   dtax[3, , 2] <- unlist(Ratio[2, ])
 
   #速動比率
-  Ratio <- (balance_dta[which(mAcc_balances == "　　流動資產合計"), , ]-balance_dta[which(mAcc_balances == "　　　存貨"), , ]-balance_dta[which(mAcc_balances == "　　　預付款項"), , ]) /
-    balance_dta[which(mAcc_balances == "　　流動負債合計"), , ]
+  Ratio <- (balance_dta[which(mAcc_balances == "　　流動資產合計"), ry, ]-balance_dta[which(mAcc_balances == "　　　存貨"), ry, ]-balance_dta[which(mAcc_balances == "　　　預付款項"), ry, ]) /
+    balance_dta[which(mAcc_balances == "　　流動負債合計"), ry, ]
   Ratio <- as.data.frame(t(Ratio))
   dtax[4, , 1] <- unlist(Ratio[1, ])
   dtax[4, , 2] <- unlist(Ratio[2, ])
 
   #利息保障倍數
-  Ratio <- (income_dta[which(mAcc_income == "稅前淨利（淨損）"), , ]+income_dta[which(mAcc_income == "所得稅費用（利益）合計"), , ]) /
-    cash_dta[which(mAcc_cash == "　　　利息費用"), , ]
+  Ratio <- (income_dta[which(mAcc_income == "稅前淨利（淨損）"), ry, ]+income_dta[which(mAcc_income == "所得稅費用（利益）合計"), ry, ]) /
+    cash_dta[which(mAcc_cash == "　　　利息費用"), ry, ]
   Ratio <- as.data.frame(t(Ratio))
   dtax[5, , 1] <- unlist(Ratio[1, ])
   dtax[5, , 2] <- unlist(Ratio[2, ])
+  
+  #應收帳款週轉率
+  Ratio <- income_dta[which(mAcc_income == "　銷貨收入淨額"), ry, ] /
+    ((
+      balance_dta[which(mAcc_balances == "　　　應收票據淨額"), ry,] +
+      balance_dta[which(mAcc_balances == "　　　應收帳款淨額"), ry, ] +
+      balance_dta[which(mAcc_balances == "　　　應收帳款－關係人淨額"), ry, ] +
+      balance_dta[which(mAcc_balances == "　　　應收票據淨額"), dy,] +
+      balance_dta[which(mAcc_balances == "　　　應收帳款淨額"), dy, ] +
+      balance_dta[which(mAcc_balances == "　　　應收帳款－關係人淨額"), dy, ]
+    ) / 2
+    )
+
+  Ratio <- as.data.frame(t(Ratio))
+  dtax[6, , 1] <- unlist(Ratio[1, ])
+  dtax[6, , 2] <- unlist(Ratio[2, ])
 
 
   # # 純益率=本期淨利（淨損）/　銷貨收入淨額
@@ -106,8 +122,8 @@ income_draw <- function() {
       }
     }
     axis(
-      1, 1:length(colnames(income_dta)),
-      format(as.Date(colnames(income_dta), format = "%Y"), "%Y")
+      1, 1:(length(year)-1),
+      format(as.Date(as.character(year[2:6]), format = "%Y"), "%Y")
     ) # X
   }
   

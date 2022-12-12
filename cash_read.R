@@ -30,5 +30,6 @@ cash_read <- function() {
       }
     }
   }
+  dtax[is.na(dtax)] <- 0
   return(dtax)
 }
