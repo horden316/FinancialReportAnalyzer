@@ -92,7 +92,7 @@ draw <- function() {
   
   #固定資產週轉率
   Ratio <- income_dta[which(mAcc_income == "　銷貨收入淨額"), ry, ] /
-    balance_dta[which(mAcc_balances == "　　非流動資產合計"), ry,]
+    balance_dta[which(mAcc_balances == "　　　不動產、廠房及設備"), ry,]
   Ratio <- as.data.frame(t(Ratio))
   dtax[10, , 1] <- unlist(Ratio[1,])
   dtax[10, , 2] <- unlist(Ratio[2,])
