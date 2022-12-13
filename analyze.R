@@ -1,9 +1,9 @@
 analyze <- function() {
   #######################
   ###### TEST DATA ######
-  # s <- 1  #1304 台聚
-  # y <- 2  #2018
-  # r <- 1  #純益率
+  s <- 1  #1304 台聚
+  y <- 3  #2018
+  r <- 13  #ratio
   #######################
   #
   # ratio list
@@ -29,13 +29,13 @@ analyze <- function() {
     ###### year ######
     while ((stock[s] %in% stock) == TRUE &
            (year[y] %in% year) == FALSE) {
-      li <- paste0(1:(length(year) - 1), sep = ".", year[2:length(year)])
+      li <- paste0(1:(length(year) - 2), sep = ".", year[3:length(year)])
       y <- readline(cat("請輸入要分析的年度：", li, sep = "\n"))  # input
       
       if (y == "exit")
         break
       else
-        y <- as.numeric(y) + 1
+        y <- as.numeric(y) + 2
       
       ###### ratio ######
       while ((stock[s] %in% stock) == TRUE &
@@ -55,31 +55,45 @@ analyze <- function() {
   #
   ###### magic for analyze ######
   magic_black_box <- function(mAcc) {
-    m1 <- m2 <- c("", 0)# max change (account title, value)
+    m1 <- m2 <- c("", 0)  # max change (account title, value)
     t2 <- ""  # result
     
     for (m in mAcc) {
       # calculate
-      n <-
-        income_dta[which(mAcc_income == m), y, s] - income_dta[which(mAcc_income == m), (y - 1), s]
+      if (m %in% mAcc_income)  {  # check mAcc in income
+        rp <- income_dta[which(mAcc_income == m), (y - 1), s]
+        rc <- income_dta[which(mAcc_income == m), y, s]
+      } else if (m %in% mAcc_balances) {  # check mAcc in balance
+        rp <- balance_dta[which(mAcc_balances == m), (y - 1), s]
+        rc <- balance_dta[which(mAcc_balances == m), y, s]
+      } else if (m %in% mAcc_cash) {  # check mAcc in cash
+        rp <- cash_dta[which(mAcc_cash == m), (y - 1), s]
+        rc <- cash_dta[which(mAcc_cash == m), y, s]
+      } else{
+        rp <- rc <- 0
+      }
+       
+        
+      
+      n <- rc - rp
       
       # add to t2
       if (n > 0)
-        t <- paste(m, "與前年相比增加了", n, "元")
+        t <- paste(m, "與前年相比增加了", percent(n/rp, accuracy = 0.01), "%")
       else if (n < 0)
-        t <- paste(m, "與前年相比減少了", abs(n), "元")
+        t <- paste(m, "與前年相比減少了", percent( abs(n)/rp, accuracy = 0.01), "%")
       else
         t <- paste(m, "與前年相同")
       
       t2 <- paste(t2, t, sep = "\n")
       
       # find 2 max change account title & value
-      if (abs(n) > as.numeric(m1[2])) {
+      if (abs(n)/rp > as.numeric(m1[2])) {
         temp <- m1
-        m1 <- c(m , abs(n))
+        m1 <- c(m , abs(n)/rp)
         m2 <- temp
-      } else if (abs(n) > as.numeric(m2[2])) {
-        m2 <- c(m , abs(n))
+      } else if (abs(n)/rp > as.numeric(m2[2])) {
+        m2 <- c(m , abs(n)/rp)
       }
       
     }
@@ -91,7 +105,7 @@ analyze <- function() {
   #
   
   ratio_cr <-
-    ratio_dta1[r, y, s] - ratio_dta1[r, (y - 1), s]  # ratio change rate
+    ratio_dta1[r, y-1, s] - ratio_dta1[r, (y - 2), s]  # ratio change rate
   
   # add to t1
   if (ratio_cr > 0)
@@ -105,12 +119,202 @@ analyze <- function() {
   
   ############################################################################
   #
-  # 純益率=本期淨利（淨損）/　銷貨收入淨額
-  if (r == 1) {
-    mAcc <- c("所得稅費用（利益）合計", "　營業外收入及支出合計", "　營業費用合計"
-              , "　銷貨成本", "　銷貨收入淨額")
+  
+  #負債佔資產比率
+  if (r == 5) {
+    mAcc <- c(
+      # 分子
+      ""
+      # 分母  
+      , "")
+    
+    t2 <- magic_black_box(mAcc)
+  }  
+  
+  #長期資金佔固定資產比率
+  if (r == 5) {
+    mAcc <- c(
+      # 分子
+      ""
+      # 分母  
+      , "")
+    
+    t2 <- magic_black_box(mAcc)
+  }  
+  
+  #流動比率
+  if (r == 5) {
+    mAcc <- c(
+      # 分子
+      ""
+      # 分母  
+      , "")
+    
+    t2 <- magic_black_box(mAcc)
+  }  
+  
+  #速動比率
+  if (r == 5) {
+    mAcc <- c(
+      # 分子
+      ""
+      # 分母  
+      , "")
+    
+    t2 <- magic_black_box(mAcc)
+  }  
+  
+  #利息保障倍數
+  if (r == 5) {
+    mAcc <- c(
+      # 分子
+      ""
+      # 分母  
+      , "")
+    
+    t2 <- magic_black_box(mAcc)
+  }  
+  
+  #應收帳款週轉率
+  if (r == 6) {
+    mAcc <- c(
+      # 分子
+      "　銷貨收入淨額"
+      # 分母  
+      , "　　　應收票據淨額", "　　　應收帳款淨額")
+    
     t2 <- magic_black_box(mAcc)
   }
+  
+  #平均收現日數
+  if (r == 7) {
+    mAcc <- c(
+      # 分子
+      "　銷貨收入淨額"
+      # 分母  
+      , "　　　應收票據淨額", "　　　應收帳款淨額")
+    
+    t2 <- magic_black_box(mAcc)
+  }
+  
+  #存貨週轉率
+  if (r == 8) {
+    mAcc <- c(
+      # 分子
+      "　銷貨成本"
+      # 分母  
+      , "　　　存貨")
+    
+    t2 <- magic_black_box(mAcc)
+  }
+  
+  #平均售貨日數
+  if (r == 9) {
+    mAcc <- c(
+      # 分子
+      "　銷貨成本"
+      # 分母  
+      , "　　　存貨")
+    
+    t2 <- magic_black_box(mAcc)
+  }
+  
+  #固定資產週轉率
+  if (r == 10) {
+    mAcc <- c(
+      # 分子
+      "　銷貨收入淨額"
+      # 分母  
+      , "　　　不動產、廠房及設備")
+    
+    t2 <- magic_black_box(mAcc)
+  }
+  
+  #總資產週轉率
+  if (r == 11) {
+    mAcc <- c(
+      # 分子
+      "　銷貨收入淨額"
+      # 分母  
+      , "　　流動資產合計", "　　非流動資產合計", "　資產總額")
+    
+    t2 <- magic_black_box(mAcc)
+  }
+  
+  #資產報酬率
+  if (r == 12) {
+    mAcc <- c(
+      # 分子
+      "營業收入合計", "營業成本合計", "　營業費用合計", "營業利益（損失）"
+      , "　營業外收入及支出合計", "稅前淨利（淨損）", "所得稅費用（利益）合計"
+      , "繼續營業單位本期淨利（淨損）", "　停業單位損益合計", "　　　利息費用"
+      # 分母        
+      , "　　流動資產合計", "　　非流動資產合計", "　資產總額")
+    
+    t2 <- magic_black_box(mAcc)
+  }
+  
+  #股東權益報酬率
+  if (r == 13) {
+    mAcc <- c(
+      # 分子
+      "營業收入合計", "營業成本合計", "　營業費用合計", "營業利益（損失）"
+      , "　營業外收入及支出合計", "稅前淨利（淨損）", "所得稅費用（利益）合計"
+      , "繼續營業單位本期淨利（淨損）", "　停業單位損益合計"
+      # 分母
+      , "　　歸屬於母公司業主之權益合計", "　　非控制權益", "　權益總額")
+    
+    t2 <- magic_black_box(mAcc)
+  }
+  
+  #純益率
+  if (r == 14) {
+    mAcc <- c(
+      # 分子
+      "營業收入合計", "營業成本合計", "　營業費用合計", "營業利益（損失）"
+      , "　營業外收入及支出合計", "稅前淨利（淨損）", "所得稅費用（利益）合計"
+      , "繼續營業單位本期淨利（淨損）", "　停業單位損益合計"
+      # 分母
+      , "　銷貨收入淨額")
+    
+    t2 <- magic_black_box(mAcc)
+  }
+  
+  #每股盈餘
+  if (r == 15) {
+    mAcc <- c(
+      # 分子
+      "營業收入合計", "營業成本合計", "　營業費用合計", "營業利益（損失）"
+      , "　營業外收入及支出合計", "稅前淨利（淨損）", "所得稅費用（利益）合計"
+      , "繼續營業單位本期淨利（淨損）", "　停業單位損益合計"
+      # 分母
+      , "　　　　普通股股本")
+    
+    t2 <- magic_black_box(mAcc)
+  }
+  
+  #現金流量比率
+  if (r == 5) {
+    mAcc <- c(
+      # 分子
+      ""
+      # 分母  
+      , "")
+    
+    t2 <- magic_black_box(mAcc)
+  }  
+  
+  #現金再投資比率
+  if (r == 5) {
+    mAcc <- c(
+      # 分子
+      ""
+      # 分母  
+      , "")
+    
+    t2 <- magic_black_box(mAcc)
+  }  
+  
   
   ############################################################################
 
