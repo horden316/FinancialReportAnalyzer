@@ -2,7 +2,7 @@ analyze <- function() {
   #######################
   ###### TEST DATA ######
   # s <- 1  #1304 台聚
-  # y <- 2  #2018
+  # y <- 3  #2018
   # r <- 1  #純益率
   #######################
   #
@@ -29,13 +29,13 @@ analyze <- function() {
     ###### year ######
     while ((stock[s] %in% stock) == TRUE &
            (year[y] %in% year) == FALSE) {
-      li <- paste0(1:(length(year) - 1), sep = ".", year[2:length(year)])
+      li <- paste0(1:(length(year) - 2), sep = ".", year[3:length(year)])
       y <- readline(cat("請輸入要分析的年度：", li, sep = "\n"))  # input
       
       if (y == "exit")
         break
       else
-        y <- as.numeric(y) + 1
+        y <- as.numeric(y) + 2
       
       ###### ratio ######
       while ((stock[s] %in% stock) == TRUE &
@@ -55,31 +55,45 @@ analyze <- function() {
   #
   ###### magic for analyze ######
   magic_black_box <- function(mAcc) {
-    m1 <- m2 <- c("", 0)# max change (account title, value)
+    m1 <- m2 <- c("", 0)  # max change (account title, value)
     t2 <- ""  # result
     
     for (m in mAcc) {
       # calculate
-      n <-
-        income_dta[which(mAcc_income == m), y, s] - income_dta[which(mAcc_income == m), (y - 1), s]
+      if (m %in% mAcc_income)  {  # check mAcc in income
+        rp <- income_dta[which(mAcc_income == m), (y - 1), s]
+        rc <- income_dta[which(mAcc_income == m), y, s]
+      } else if (m %in% mAcc_balances) {  # check mAcc in balance
+        rp <- balance_dta[which(mAcc_balances == m), (y - 1), s]
+        rc <- balance_dta[which(mAcc_balances == m), y, s]
+      } else if (m %in% mAcc_cash) {  # check mAcc in cash
+        rp <- cash_dta[which(mAcc_cash == m), (y - 1), s]
+        rc <- cash_dta[which(mAcc_cash == m), y, s]
+      } else{
+        rp <- rc <- 0
+      }
+       
+        
+      
+      n <- rc - rp
       
       # add to t2
       if (n > 0)
-        t <- paste(m, "與前年相比增加了", n, "元")
+        t <- paste(m, "與前年相比增加了", percent(n/rp, accuracy = 0.01), "%")
       else if (n < 0)
-        t <- paste(m, "與前年相比減少了", abs(n), "元")
+        t <- paste(m, "與前年相比減少了", percent( abs(n)/rp, accuracy = 0.01), "%")
       else
         t <- paste(m, "與前年相同")
       
       t2 <- paste(t2, t, sep = "\n")
       
       # find 2 max change account title & value
-      if (abs(n) > as.numeric(m1[2])) {
+      if (abs(n)/rp > as.numeric(m1[2])) {
         temp <- m1
-        m1 <- c(m , abs(n))
+        m1 <- c(m , abs(n)/rp)
         m2 <- temp
-      } else if (abs(n) > as.numeric(m2[2])) {
-        m2 <- c(m , abs(n))
+      } else if (abs(n)/rp > as.numeric(m2[2])) {
+        m2 <- c(m , abs(n)/rp)
       }
       
     }
@@ -91,7 +105,7 @@ analyze <- function() {
   #
   
   ratio_cr <-
-    ratio_dta1[r, y, s] - ratio_dta1[r, (y - 1), s]  # ratio change rate
+    ratio_dta1[r, y-1, s] - ratio_dta1[r, (y - 2), s]  # ratio change rate
   
   # add to t1
   if (ratio_cr > 0)

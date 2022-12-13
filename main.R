@@ -54,4 +54,4 @@ ratio_dta1 <- draw()
 
 
 # analyze
-# analyze()
+analyze()
