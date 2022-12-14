@@ -157,7 +157,7 @@ draw <- function() {
   ################################################################################
   #
   # draw
-  print(dtax)
+  # print(dtax)
   for (r in 1:rnum) {
     Yrange <- c(min(dtax[r, , ]) / 1.1, max(dtax[r, , ]) * 1.1) # Y
     #print(paste("r: ",r))
