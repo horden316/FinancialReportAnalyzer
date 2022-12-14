@@ -46,8 +46,11 @@ mAcc_balances <- c(
   "　　　預付款項",
   "　　流動資產合計",
   "　　　不動產、廠房及設備",
+  "　　　投資性不動產淨額",
   "　　非流動資產合計",
   "　資產總額",
+  "　　　短期借款",
+  "　　　應付短期票券",
   "　　　應付帳款",
   "　　　其他流動負債",
   "　　流動負債合計",
@@ -66,7 +69,11 @@ mAcc_balances <- c(
 mAcc_cash <- c(
   "　繼續營業單位稅前淨利（淨損）",
   "　本期稅前淨利（淨損）",
+  "　　　折舊費用",
+  "　　　攤銷費用",
   "　　　利息費用",
+  "　　　　應收帳款（增加）減少",
+  "　　　　存貨（增加）減少",
   "　營運產生之現金流入（流出）",
   "　收取之利息",
   "　支付之利息",
@@ -74,6 +81,7 @@ mAcc_cash <- c(
   "營業活動之淨現金流入（流出）",
   "　發放現金股利"
 )
+
 
 #
 ################################################################################
@@ -91,6 +99,12 @@ source("~/Github/FinancialReportAnalyzer/analyze.R")
 income_dta <- income_read()
 balance_dta <- balance_read()
 cash_dta <- cash_read()
+
+#print(income_dta)
+#print(balance_dta)
+#print(cash_dta)
+
+
 
 ratio_dta1 <- draw()
 
